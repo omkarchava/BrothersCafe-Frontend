@@ -7,3 +7,17 @@ input.card { display:block; width:100%; padding:8px; border-radius:6px; border:1
 a { color: #0a74ff; text-decoration:none; }
 table { width:100%; border-collapse:collapse; }
 th, td { padding:8px; border-bottom:1px solid #eee; text-align:left; }
+nav a {
+  color: #3e2723;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+nav a[href="/Logout"]:hover {
+  background-color: #6d4c41;
+}
+
