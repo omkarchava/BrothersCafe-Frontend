@@ -6,7 +6,6 @@ export default function Billing() {
   const [menu, setMenu] = useState([]);
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
-  const [quantities, setQuantities] = useState({}); // store per-item quantity
 
   useEffect(() => {
     axios
@@ -15,37 +14,46 @@ export default function Billing() {
       .catch(() => {});
   }, []);
 
-  const handleQuantityChange = (id, value) => {
-    setQuantities({ ...quantities, [id]: Number(value) });
-  };
-
+  // Add to cart (default quantity = 1)
   const addToCart = (item) => {
-    const qty = quantities[item._id] || 1;
     setCart((prev) => {
       const existing = prev.find((i) => i._id === item._id);
       if (existing) {
         return prev.map((i) =>
-          i._id === item._id ? { ...i, quantity: i.quantity + qty } : i
+          i._id === item._id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      return [...prev, { ...item, quantity: qty }];
+      return [...prev, { ...item, quantity: 1 }];
     });
   };
 
+  // Update quantity inside cart
+  const updateCartQuantity = (id, newQty) => {
+    if (newQty <= 0) {
+      setCart((prev) => prev.filter((i) => i._id !== id));
+    } else {
+      setCart((prev) =>
+        prev.map((i) => (i._id === id ? { ...i, quantity: newQty } : i))
+      );
+    }
+  };
+
+  // Compute total
   const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
+  // Save + Print
   const handleSavePrint = async () => {
     if (cart.length === 0) return alert("Cart is empty");
 
     try {
-      // Save bill
       await axios.post("https://brotherscafe-backend.onrender.com/api/bill/new", {
         items: cart,
         total,
       });
+
       alert("Bill saved successfully!");
 
-      // Print receipt
+      // Print
       const now = new Date();
       const dateStr = now.toLocaleDateString();
       const timeStr = now.toLocaleTimeString();
@@ -74,7 +82,9 @@ export default function Billing() {
       });
 
       receiptWindow.document.write(`<hr/>`);
-      receiptWindow.document.write(`<div class='line'><strong>Total</strong><strong>₹${total}</strong></div>`);
+      receiptWindow.document.write(
+        `<div class='line'><strong>Total</strong><strong>₹${total}</strong></div>`
+      );
       receiptWindow.document.write(`<hr/><div class='center'>Thank you for visiting!</div>`);
       receiptWindow.document.write(`</body></html>`);
       receiptWindow.document.close();
@@ -88,7 +98,7 @@ export default function Billing() {
     }
   };
 
-  // Filter menu based on search
+  // Filter by search
   const filteredMenu = menu.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
@@ -115,38 +125,53 @@ export default function Billing() {
 
       <h3>Menu</h3>
       {filteredMenu.length === 0 && <div className="card">No menu items found.</div>}
-      {filteredMenu.map((item, idx) => (
-        <div key={idx} className="card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      {filteredMenu.map((item) => (
+        <div
+          key={item._id}
+          className="card"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <div>
             {item.name} — ₹{item.price}
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-            <select
-              value={quantities[item._id] || 1}
-              onChange={(e) => handleQuantityChange(item._id, e.target.value)}
-            >
-              {[...Array(10)].map((_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {i + 1}
-                </option>
-              ))}
-            </select>
-            <button className="btn" onClick={() => addToCart(item)}>
-              Add
-            </button>
-          </div>
+          <button className="btn" onClick={() => addToCart(item)}>
+            Add
+          </button>
         </div>
       ))}
 
       <div style={{ marginTop: 20 }}>
         <h3>Cart</h3>
         {cart.length === 0 && <div className="card">Cart is empty</div>}
-        {cart.map((i, idx) => (
-          <div key={idx} className="card" style={{ display: "flex", justifyContent: "space-between" }}>
-            <div>
-              {i.name} × {i.quantity}
+        {cart.map((i) => (
+          <div
+            key={i._id}
+            className="card"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ flex: 1 }}>{i.name}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+              <button onClick={() => updateCartQuantity(i._id, i.quantity - 1)}>-</button>
+              <input
+                type="number"
+                value={i.quantity}
+                min="1"
+                style={{ width: 40, textAlign: "center" }}
+                onChange={(e) =>
+                  updateCartQuantity(i._id, Number(e.target.value))
+                }
+              />
+              <button onClick={() => updateCartQuantity(i._id, i.quantity + 1)}>+</button>
             </div>
-            <div>₹{i.price * i.quantity}</div>
+            <div style={{ width: 60, textAlign: "right" }}>₹{i.price * i.quantity}</div>
           </div>
         ))}
         <hr />
