@@ -12,41 +12,51 @@ export default function BillsList() {
       setBills(res.data);
     } catch (err) {
       console.error(err);
+      alert("Error fetching bills");
     }
   };
 
-  useEffect(() => { fetchBills(); }, []);
-
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this bill?")) return;
-    try {
-      await axios.delete(`${API_URL}/api/bill/delete/${id}`);
-      alert("Bill deleted");
-      fetchBills();
-    } catch (err) {
-      alert("Error deleting bill");
-    }
-  };
+  useEffect(() => {
+    fetchBills();
+  }, []);
 
   return (
     <div className="container">
       <h2>Saved Bills</h2>
-      <Link to="/billing">← Back to Billing</Link>
-      <table>
-        <thead>
-          <tr><th>Date</th><th>Items</th><th>Total</th><th>Action</th></tr>
-        </thead>
-        <tbody>
-          {bills.map(b => (
-            <tr key={b._id}>
-              <td>{new Date(b.createdAt).toLocaleString()}</td>
-              <td>{b.items.map(i=>i.name).join(", ")}</td>
-              <td>₹{b.total}</td>
-              <td><button className="btn" onClick={()=>handleDelete(b._id)}>Delete</button></td>
+
+      <div style={{ marginBottom: 15 }}>
+        <Link to="/billing">← Back to Billing</Link>
+      </div>
+
+      {bills.length === 0 ? (
+        <p>No bills found.</p>
+      ) : (
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Items</th>
+              <th>Total</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {bills.map((bill) => (
+              <tr key={bill._id}>
+                <td>{new Date(bill.createdAt).toLocaleString()}</td>
+
+                <td>
+                  {bill.items
+                    ?.map((item) => `${item.name} x${item.quantity}`)
+                    .join(", ")}
+                </td>
+
+                <td>₹{bill.total}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
-);
+  );
 }
