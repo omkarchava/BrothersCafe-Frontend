@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { API_URL } from "../config";
 
 export default function SalesReport() {
   const [data, setData] = useState([]);
 
   const fetchData = async () => {
     try {
-      const res = await axios.get("https://brotherscafe-backend.onrender.com/api/sales/daywise");
+      const res = await axios.get(`${API_URL}/api/sales/daywise`);
       setData(res.data);
     } catch (err) {
       console.error(err);

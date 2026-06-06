@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 
 export default function Logout({ setIsLoggedIn }) {
   const [message, setMessage] = useState("Logging out...");

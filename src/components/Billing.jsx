@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { API_URL } from "../config";
 
 export default function Billing() {
   const [menu, setMenu] = useState([]);
@@ -9,7 +10,7 @@ export default function Billing() {
 
   useEffect(() => {
     axios
-      .get("https://brotherscafe-backend.onrender.com/api/menu")
+      .get(`${API_URL}/api/menu`)
       .then((res) => setMenu(res.data))
       .catch(() => {});
   }, []);
@@ -46,7 +47,7 @@ export default function Billing() {
     if (cart.length === 0) return alert("Cart is empty");
 
     try {
-      await axios.post("https://brotherscafe-backend.onrender.com/api/bill/new", {
+      await axios.post(`${API_URL}/api/bill/new`, {
         items: cart,
         total,
       });
@@ -70,7 +71,7 @@ export default function Billing() {
 
       receiptWindow.document.write(`<html><head><title>Receipt</title>${style}</head><body>`);
       receiptWindow.document.write(`<div class='center' style='font-size:20px;'>🌳</div>`);
-      receiptWindow.document.write(`<div class='center'><strong>Brothers Cafe</strong></div>`);
+      receiptWindow.document.write(`<div class='center'><strong> Maharashtra Lunch Home </strong></div>`);
       receiptWindow.document.write(`<div class='center'>${dateStr} ${timeStr}</div>`);
       receiptWindow.document.write(`<hr/>`);
 
@@ -105,7 +106,7 @@ export default function Billing() {
 
   return (
     <div className="container">
-      <h2>☕ Brother's Cafe</h2>
+      <h2>Maharashtra Mega Kitchen</h2>
       <div style={{ marginBottom: 10 }}>
         <Link to="/menu-management">Manage Menu</Link>
         <Link to="/bills-list" style={{ marginLeft: 12 }}>

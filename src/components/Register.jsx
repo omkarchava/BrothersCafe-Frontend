@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../config";
 
 export default function Register(){
   const [username,setUsername] = useState("");
@@ -9,7 +10,7 @@ export default function Register(){
 
   const handleRegister = async () => {
     try {
-      await axios.post("https://brotherscafe-backend.onrender.com/api/auth/register", { username, password });
+      await axios.post(`${API_URL}/api/auth/register`, { username, password });
       alert("Registered! Please login.");
       navigate("/");
     } catch (err) {

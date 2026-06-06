@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { API_URL } from "../config";
 
 export default function Login({ setIsLoggedIn }) {
   const [username, setUsername] = useState("");
@@ -12,7 +13,7 @@ export default function Login({ setIsLoggedIn }) {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        "https://brotherscafe-backend.onrender.com/api/auth/login",
+        `${API_URL}/api/auth/login`,
         { username, password }
       );
 
@@ -39,7 +40,7 @@ export default function Login({ setIsLoggedIn }) {
       className="container"
       style={{ display: "flex", flexDirection: "column", alignItems: "center", marginTop: "80px" }}
     >
-      <h2 style={{ color: "#0a74ff" }}>☕ Brothers Café — Login</h2>
+      <h2 style={{ color: "#0a74ff" }}> Maharashtra Mega Kitchen</h2>
 
       <div
         style={{

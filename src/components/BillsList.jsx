@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { API_URL } from "../config";
 
 export default function BillsList() {
   const [bills, setBills] = useState([]);
 
   const fetchBills = async () => {
     try {
-      const res = await axios.get("https://brotherscafe-backend.onrender.com/api/bill/all");
+      const res = await axios.get(`${API_URL}/api/bill/all`);
       setBills(res.data);
     } catch (err) {
       console.error(err);
@@ -19,7 +20,7 @@ export default function BillsList() {
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this bill?")) return;
     try {
-      await axios.delete(`https://brotherscafe-backend.onrender.com/api/bill/delete/${id}`);
+      await axios.delete(`${API_URL}/api/bill/delete/${id}`);
       alert("Bill deleted");
       fetchBills();
     } catch (err) {
