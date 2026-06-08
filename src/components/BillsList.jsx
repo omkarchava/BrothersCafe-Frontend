@@ -31,10 +31,16 @@ export default function BillsList() {
       {bills.length === 0 ? (
         <p>No bills found.</p>
       ) : (
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+          }}
+        >
           <thead>
             <tr>
               <th>Date</th>
+              <th>Billed By</th>
               <th>Items</th>
               <th>Total</th>
             </tr>
@@ -45,9 +51,14 @@ export default function BillsList() {
               <tr key={bill._id}>
                 <td>{new Date(bill.createdAt).toLocaleString()}</td>
 
+                <td>{bill.billedBy || "Unknown"}</td>
+
                 <td>
                   {bill.items
-                    ?.map((item) => `${item.name} x${item.quantity}`)
+                    ?.map(
+                      (item) =>
+                        `${item.name} x${item.quantity}`
+                    )
                     .join(", ")}
                 </td>
 

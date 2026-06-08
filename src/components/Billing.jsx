@@ -21,7 +21,7 @@ export default function Billing() {
       const existing = prev.find((i) => i._id === item._id);
       if (existing) {
         return prev.map((i) =>
-          i._id === item._id ? { ...i, quantity: i.quantity + 1 } : i
+          i._id === item._id ? { ...i, quantity: i.quantity + 1 } : i,
         );
       }
       return [...prev, { ...item, quantity: 1 }];
@@ -34,7 +34,7 @@ export default function Billing() {
       setCart((prev) => prev.filter((i) => i._id !== id));
     } else {
       setCart((prev) =>
-        prev.map((i) => (i._id === id ? { ...i, quantity: newQty } : i))
+        prev.map((i) => (i._id === id ? { ...i, quantity: newQty } : i)),
       );
     }
   };
@@ -50,6 +50,7 @@ export default function Billing() {
       await axios.post(`${API_URL}/api/bill/new`, {
         items: cart,
         total,
+        billedBy: localStorage.getItem("username"),
       });
 
       alert("Bill saved successfully!");
@@ -69,24 +70,37 @@ export default function Billing() {
         </style>
       `;
 
-      receiptWindow.document.write(`<html><head><title>Receipt</title>${style}</head><body>`);
-      receiptWindow.document.write(`<div class='center' style='font-size:20px;'>🌳</div>`);
-      receiptWindow.document.write(`<div class='center'><strong> Maharashtra Lunch Home </strong></div>`);
-      receiptWindow.document.write(`<div class='center'>${dateStr} ${timeStr}</div>`);
+      receiptWindow.document.write(
+        `<html><head><title>Receipt</title>${style}</head><body>`,
+      );
+      receiptWindow.document.write(
+        `<div class='center' style='font-size:20px;'>🌳</div>`,
+      );
+      receiptWindow.document.write(
+        `<div class='center'><strong> Maharashtra Lunch Home </strong></div>`,
+      );
+      receiptWindow.document.write(
+        `<div class='center'>${dateStr} ${timeStr}</div>`,
+      );
       receiptWindow.document.write(`<hr/>`);
 
       cart.forEach((item) => {
-        const name = item.name.length > 18 ? item.name.substring(0, 15) + "..." : item.name;
+        const name =
+          item.name.length > 18
+            ? item.name.substring(0, 15) + "..."
+            : item.name;
         receiptWindow.document.write(
-          `<div class='line'><span>${name} x${item.quantity}</span><span>₹${item.price * item.quantity}</span></div>`
+          `<div class='line'><span>${name} x${item.quantity}</span><span>₹${item.price * item.quantity}</span></div>`,
         );
       });
 
       receiptWindow.document.write(`<hr/>`);
       receiptWindow.document.write(
-        `<div class='line'><strong>Total</strong><strong>₹${total}</strong></div>`
+        `<div class='line'><strong>Total</strong><strong>₹${total}</strong></div>`,
       );
-      receiptWindow.document.write(`<hr/><div class='center'>Thank you for visiting!</div>`);
+      receiptWindow.document.write(
+        `<hr/><div class='center'>Thank you for visiting!</div>`,
+      );
       receiptWindow.document.write(`</body></html>`);
       receiptWindow.document.close();
       receiptWindow.focus();
@@ -101,7 +115,7 @@ export default function Billing() {
 
   // Filter by search
   const filteredMenu = menu.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase())
+    item.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
@@ -125,7 +139,9 @@ export default function Billing() {
       />
 
       <h3>Menu</h3>
-      {filteredMenu.length === 0 && <div className="card">No menu items found.</div>}
+      {filteredMenu.length === 0 && (
+        <div className="card">No menu items found.</div>
+      )}
       {filteredMenu.map((item) => (
         <div
           key={item._id}
@@ -160,7 +176,9 @@ export default function Billing() {
           >
             <div style={{ flex: 1 }}>{i.name}</div>
             <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-              <button onClick={() => updateCartQuantity(i._id, i.quantity - 1)}>-</button>
+              <button onClick={() => updateCartQuantity(i._id, i.quantity - 1)}>
+                -
+              </button>
               <input
                 type="number"
                 value={i.quantity}
@@ -170,9 +188,13 @@ export default function Billing() {
                   updateCartQuantity(i._id, Number(e.target.value))
                 }
               />
-              <button onClick={() => updateCartQuantity(i._id, i.quantity + 1)}>+</button>
+              <button onClick={() => updateCartQuantity(i._id, i.quantity + 1)}>
+                +
+              </button>
             </div>
-            <div style={{ width: 60, textAlign: "right" }}>₹{i.price * i.quantity}</div>
+            <div style={{ width: 60, textAlign: "right" }}>
+              ₹{i.price * i.quantity}
+            </div>
           </div>
         ))}
         <hr />
