@@ -10,6 +10,15 @@ export default function Login({ setIsLoggedIn }) {
   const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
+  const start = Date.now();
+
+  const res = await axios.post(
+    `${API_URL}/api/auth/login`,
+    formData
+  );
+
+  console.log("Login Time:", Date.now() - start, "ms");
+
   const handleLogin = async () => {
     try {
       const res = await axios.post(
