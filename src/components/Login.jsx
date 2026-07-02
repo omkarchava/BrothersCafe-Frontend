@@ -73,7 +73,7 @@ export default function Login({ setIsLoggedIn }) {
       }}
     >
       <h2 style={{ color: "#0a74ff" }}>
-        Maharashtra Mega Kitchen
+        Brothers Cafe Sangrul
       </h2>
 
       <div

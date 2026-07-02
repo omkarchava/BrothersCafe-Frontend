@@ -77,7 +77,7 @@ export default function Billing() {
         `<div class='center' style='font-size:20px;'>🌳</div>`,
       );
       receiptWindow.document.write(
-        `<div class='center'><strong> Maharashtra Lunch Home </strong></div>`,
+        `<div class='center'><strong> Brothers Cafe Sangrul </strong></div>`,
       );
       receiptWindow.document.write(
         `<div class='center'>${dateStr} ${timeStr}</div>`,
