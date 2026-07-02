@@ -102,7 +102,7 @@ export default function MenuManagement() {
 
   return (
     <div className="container">
-      <h2>Maharashtra Mega Kitchen - Menu Management</h2>
+      <h2>Brothers Cafe - Menu Management</h2>
 
       <Link to="/billing">← Back to Billing</Link>
 

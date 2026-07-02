@@ -120,7 +120,7 @@ export default function Billing() {
 
   return (
     <div className="container">
-      <h2>Maharashtra Mega Kitchen</h2>
+      <h2>Brothers Cafe</h2>
       <div style={{ marginBottom: 10 }}>
         <Link to="/menu-management">Manage Menu</Link>
         <Link to="/bills-list" style={{ marginLeft: 12 }}>
